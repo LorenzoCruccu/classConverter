@@ -22,8 +22,14 @@
 					"be2fe.autoImplement": {
 						"type": "boolean",
 						"default": true,
-						"description": "Automatically add class Transformer attributes when possible",
+						"description": "Automatically add class @Transform(boolTransform) attributes when possible",
 						"scope": "classtransformer-autoimplement"
+					},
+					"be2fe.classTransformerDate": {
+						"type": "string",
+						"default": "insdate moddate lastdate lastseen",
+						"description": "Automatically add @Transform(dataTransform) above this list of words. Must separate each word only with a space to make this work properly",
+						"scope": "be2fe-utilities"
 					},
 					"be2fe.utilities": {
 						"type": "string",

@@ -1,16 +1,24 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
+import { addListener } from 'process';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
+	//confs
+	const autoInsertDate: string = vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+	const customUtilities: any = vscode.workspace.getConfiguration().get('be2fe.utilities');
+	const autoClassTransformer: any = vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement');
+	//
+
 	// *** java to typescript
 	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', () => {
 		
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
+
 
 		if (editor) {
 			const document = editor.document;
@@ -20,9 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
 					let word = document.getText(range).trim(); //word contiene la selezione
 
 					// utilities (commento iniziale sopra gli attributi)
-					const customUtilities: any = vscode.workspace.getConfiguration().get('be2fe.utilities');
-					const autoClassTransformer: any = vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement');
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n*/\n`;
+
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n 
+					@Exclude({ toPlainOnly: true }) \n*/\n`;
 
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
@@ -41,6 +49,15 @@ export function activate(context: vscode.ExtensionContext) {
 							converted = converted.replace('boolean', '') + ':boolean;\n';
 							autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 						}
+						if (autoInsertDate!) {
+							//FIXME: handle this with a function for cleaner code purpose
+							 autoInsertDate.split(' ').forEach(value => {
+								console.log(converted.includes(value));
+								if (converted.includes(value)) {
+									converted = '@Transform(dateTransform)\n' + converted;
+								}
+							});
+						}
 						result.push(converted);
 					});
 				
@@ -53,13 +70,24 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			}); 
 		}
+
 	},);
 
 
 	context.subscriptions.push(be2fe);
 
 
-
+/*	async function checkInsertDate(converted: string) {
+		if (autoInsertDate) {
+			await autoInsertDate.split(' ').forEach(value=>{
+				 console.log(converted.includes(value));
+				if (converted.includes(value)){
+					return true;
+				}
+			});
+		}
+	}
+*/
 
 }
 
@@ -67,7 +95,7 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 
-	//TODO: impostazione "classTransformer" custom
+	//DONE: impostazione "classTransformer" custom
 	// se attiva, aggiungo i @Transform etc..
 
 	//DONE: Impostazione per i commenti utilities

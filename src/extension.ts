@@ -21,15 +21,9 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// utilities (commento iniziale sopra gli attributi)
 					const customUtilities: any = vscode.workspace.getConfiguration().get('conf.be2fe.utilities');
-					let utilities= '';
-					if(customUtilities){
-						console.log(customUtilities);
-						utilities = '/*\n' + customUtilities + '\n*/\n';
-					}else{
-						utilities = `/*\n @Transform(dateTransform)\n @Transform(boolTransform)
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n @Transform(dateTransform)\n @Transform(boolTransform)
 					\n*/\n`;
-					}
-					
+
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
 					if(word.startsWith('@') && word.endsWith(';')){

@@ -10,7 +10,8 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	console.log('Congratulations, your extension "classConverter" is now active!');
 
-	let be2fe = vscode.commands.registerCommand('classConverter.be2fe', () => {
+	// *** java to typescript
+	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', () => {
 		
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;

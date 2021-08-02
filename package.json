@@ -11,14 +11,14 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:classConverter.be2fe"
+		"onCommand:classConverter.java2typescript"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "classConverter.be2fe",
-				"title": "[be2fe]: BE Java class -> FE Typescript class"
+				"command": "classConverter.java2typescript",
+				"title": "[java2typescript]: BE Java class -> FE Typescript class"
 			}
 		]
 	},

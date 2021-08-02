@@ -15,8 +15,28 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": [
+			{
+				"title": "Configuration Samples",
+				"properties": {
+					"conf.classtransformer.autoImplement": {
+						"type": "boolean",
+						"default": true,
+						"description": "Automatically add class Transformer attributes when possible",
+						"scope": "classtransformer-autoimplement"
+					},
+					"conf.be2fe.utilities": {
+						"type": "string",
+						"default": "",
+						"description": "Add a comment with your utilities. By default it will add some class transformer utilities",
+						"scope": "be2fe-utilities"
+					}
+				}
+			}
+		],
 		"commands": [
 			{
+				"category": "be2fe",
 				"command": "classConverter.java2typescript",
 				"title": "[java2typescript]: BE Java class -> FE Typescript class"
 			}

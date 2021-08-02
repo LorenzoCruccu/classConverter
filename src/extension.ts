@@ -5,10 +5,6 @@ import * as vscode from 'vscode';
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-	
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "classConverter" is now active!');
 
 	// *** java to typescript
 	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', () => {
@@ -23,9 +19,17 @@ export function activate(context: vscode.ExtensionContext) {
 					const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
 					let word = document.getText(range).trim(); //word contiene la selezione
 
-					const utilities=`/*\n @Transform(dateTransform)\n @Transform(boolTransform)
+					// utilities (commento iniziale sopra gli attributi)
+					const customUtilities: any = vscode.workspace.getConfiguration().get('conf.be2fe.utilities');
+					let utilities= '';
+					if(customUtilities){
+						console.log(customUtilities);
+						utilities = '/*\n' + customUtilities + '\n*/\n';
+					}else{
+						utilities = `/*\n @Transform(dateTransform)\n @Transform(boolTransform)
 					\n*/\n`;
-
+					}
+					
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
 					if(word.startsWith('@') && word.endsWith(';')){
@@ -67,6 +71,14 @@ export function activate(context: vscode.ExtensionContext) {
 			}); 
 		}
 	},);
+
+	//TODO: impostazione "classTransformer" custom
+	// se attiva, aggiungo i @Transform etc..
+
+	//TODO: Impostazione per i commenti utilities
+
+
+	//TODO: stessa cosa ma MySql -> Typescript
 
 	context.subscriptions.push(be2fe);
 

@@ -29,27 +29,16 @@ export function activate(context: vscode.ExtensionContext) {
 					if(word.startsWith('@') && word.endsWith(';')){
 					word.split(';').map(c => {
 						//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
-						let converted = c.split('private').filter(a => !a.includes('@'))[0];
+						let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
 						console.log(converted);
-						if (converted.includes('long')){
-							converted = converted.replace('long', '') + ':number;\n';
+						if (converted.includes('long') || converted.includes('integer') || converted.includes('int')){
+							converted = converted.split(" ").pop() + ':number;\n';					
+							}
+						if(converted.includes('string')){
+							converted = converted.replace('string', '') + ':string;\n';
 						}
-						if (converted.includes('Long')) {
-							converted = converted.replace('Long', '') + ':number;\n';
-						}
-						if (converted.includes('Integer')) {
-							converted = converted.replace('Integer', '') + ':number;\n';
-						}
-						if (converted.includes('int')) {
-							converted = converted.replace('int', '') + ':number;\n';
-						}
-
-						if(converted.includes('String')){
-							converted = converted.replace('String', '') + ':string;\n';
-						}
-						
-						if (converted.includes('Boolean')) {
-							converted = converted.replace('Boolean', '') + ':boolean;\n';
+						if (converted.includes('boolean')) {
+							converted = converted.replace('boolean', '') + ':boolean;\n';
 							converted = '@Transform(boolTransform)\n' + converted;
 						}
 						result.push(converted);
@@ -66,13 +55,6 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	},);
 
-	//TODO: impostazione "classTransformer" custom
-	// se attiva, aggiungo i @Transform etc..
-
-	//TODO: Impostazione per i commenti utilities
-
-
-	//TODO: stessa cosa ma MySql -> Typescript
 
 	context.subscriptions.push(be2fe);
 
@@ -83,4 +65,14 @@ export function activate(context: vscode.ExtensionContext) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
+
+
+	//TODO: impostazione "classTransformer" custom
+	// se attiva, aggiungo i @Transform etc..
+
+	//DONE: Impostazione per i commenti utilities
+
+	//TODO: stessa cosa ma MySql -> Typescript
+
+	//TODO: the replacement script could be improved
 

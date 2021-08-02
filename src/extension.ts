@@ -20,12 +20,9 @@ export function activate(context: vscode.ExtensionContext) {
 					let word = document.getText(range).trim(); //word contiene la selezione
 
 					// utilities (commento iniziale sopra gli attributi)
-					const customUtilities: any = vscode.workspace.getConfiguration().get('conf.be2fe.utilities');
-					const autoClassTransformer: any = vscode.workspace.getConfiguration().get('conf.be2fe.autoClassTransformerImplement');
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n 
-					### Go to conf.be2fe.utilities if you want to custom me ###
-					@Transform(dateTransform)\n @Transform(boolTransform)
-					\n*/\n`;
+					const customUtilities: any = vscode.workspace.getConfiguration().get('be2fe.utilities');
+					const autoClassTransformer: any = vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement');
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n*/\n`;
 
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
@@ -34,9 +31,9 @@ export function activate(context: vscode.ExtensionContext) {
 						//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
 						let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
 						console.log(converted);
-						if (converted.includes('long') || converted.includes('integer') || converted.includes('int')){
+						if (converted.includes('long') || converted.includes('integer')){
 							converted = converted.split(" ").pop() + ':number;\n';	//general			
-							}
+						}
 						if(converted.includes('string')){
 							converted = converted.replace('string', '') + ':string;\n';
 						}

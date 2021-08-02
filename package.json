@@ -19,7 +19,7 @@
 			{
 				"title": "Configuration Samples",
 				"properties": {
-					"conf.classtransformer.autoImplement": {
+					"conf.be2fe.autoImplement": {
 						"type": "boolean",
 						"default": true,
 						"description": "Automatically add class Transformer attributes when possible",

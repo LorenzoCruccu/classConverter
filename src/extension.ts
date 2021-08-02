@@ -21,6 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// utilities (commento iniziale sopra gli attributi)
 					const customUtilities: any = vscode.workspace.getConfiguration().get('conf.be2fe.utilities');
+					const autoClassTransformer: any = vscode.workspace.getConfiguration().get('conf.be2fe.autoClassTransformerImplement');
 					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n @Transform(dateTransform)\n @Transform(boolTransform)
 					\n*/\n`;
 
@@ -32,14 +33,14 @@ export function activate(context: vscode.ExtensionContext) {
 						let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
 						console.log(converted);
 						if (converted.includes('long') || converted.includes('integer') || converted.includes('int')){
-							converted = converted.split(" ").pop() + ':number;\n';					
+							converted = converted.split(" ").pop() + ':number;\n';	//general			
 							}
 						if(converted.includes('string')){
 							converted = converted.replace('string', '') + ':string;\n';
 						}
 						if (converted.includes('boolean')) {
 							converted = converted.replace('boolean', '') + ':boolean;\n';
-							converted = '@Transform(boolTransform)\n' + converted;
+							autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 						}
 						result.push(converted);
 					});

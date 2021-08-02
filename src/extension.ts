@@ -22,7 +22,9 @@ export function activate(context: vscode.ExtensionContext) {
 					// utilities (commento iniziale sopra gli attributi)
 					const customUtilities: any = vscode.workspace.getConfiguration().get('conf.be2fe.utilities');
 					const autoClassTransformer: any = vscode.workspace.getConfiguration().get('conf.be2fe.autoClassTransformerImplement');
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n @Transform(dateTransform)\n @Transform(boolTransform)
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n 
+					### Go to conf.be2fe.utilities if you want to custom me ###
+					@Transform(dateTransform)\n @Transform(boolTransform)
 					\n*/\n`;
 
 					let result: string[] = [...utilities];

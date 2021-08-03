@@ -1,17 +1,16 @@
 # Change Log
 
-### Version 0.0.2
+### [Version 0.0.3]
 
-- added classTransform handling
-- minor fixes
+- Cleaner code
+- Minor fixes (handled double type for java, trimmed values for better initial indentation)
+
+### [Version 0.0.2]
+
+- Added classTransform handling
+- Minor fixes
 
 ### version 0.0.1
-Init extension
 
-All notable changes to the "classConverter" extension will be documented in this file.
+- Init extension
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release

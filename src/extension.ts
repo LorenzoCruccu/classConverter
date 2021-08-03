@@ -29,8 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n 
-					@Exclude({ toPlainOnly: true }) \n*/\n`;
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
@@ -39,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 						//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
 						let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
 						console.log(converted);
-						if (converted.includes('long') || converted.includes('integer')){
+						if (converted.includes('long') || converted.includes('integer') || converted.includes('double')){
 							converted = converted.split(" ").pop() + ':number;\n';	//general			
 						}
 						if(converted.includes('string')){
@@ -76,18 +75,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(be2fe);
 
-
-/*	async function checkInsertDate(converted: string) {
+/*
+async function checkInsertDate(converted: string) {
 		if (autoInsertDate) {
 			await autoInsertDate.split(' ').forEach(value=>{
 				 console.log(converted.includes(value));
 				if (converted.includes(value)){
-					return true;
+					return converted;
 				}
 			});
 		}
 	}
-*/
+	*/
+
 
 }
 

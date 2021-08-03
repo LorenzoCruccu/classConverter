@@ -47,15 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
 								converted = converted.replace('boolean', '') + ':boolean;\n';
 								autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 							}
-							//FIXME:
-							// converted = checkInsertDate(converted);
-							if (autoInsertDate) {
-								autoInsertDate.split(' ').forEach(value => {
-									if (converted.includes(value)) {
-										converted = '@Transform(dateTransform)\n' + converted;
-									}
-								});
-							}
+							converted = checkInsertDate(converted);
 
 							result.push(converted);
 						});
@@ -75,18 +67,18 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(be2fe);
 
-	//FIXME: to check 
-	/*function checkInsertDate(converted: string): string {
+	function checkInsertDate(converted: string): string {
+		if (autoInsertDate) {
 			autoInsertDate.split(' ').forEach(value => {
 				if (converted.includes(value)) {
-					return ('@Transform(dateTransform)\n' + converted);
+					return converted = '@Transform(dateTransform)\n' + converted;
 				}
 			});
-			return converted;
+		}
+		return converted;
 	}
-	*/
 
-	//FIXME: to check promise
+	//TODO: to check promise (only for studing purpose)
 	/*
 		function checkInsertDate(converted: string): Promise<string> {
 		return new Promise((resolve) => {

@@ -1,6 +1,5 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
-import { addListener } from 'process';
 import * as vscode from 'vscode';
 
 // this method is called when your extension is activated
@@ -14,8 +13,8 @@ export function activate(context: vscode.ExtensionContext) {
 	//
 
 	// *** java to typescript
-	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', () => {
-		
+	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', async () => {
+
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 
@@ -29,64 +28,77 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' :  `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
+					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
-					if(word.startsWith('@') && word.endsWith(';')){
-					word.split(';').map(c => {
-						//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
-						let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
-						console.log(converted);
-						if (converted.includes('long') || converted.includes('integer') || converted.includes('double')){
-							converted = converted.split(" ").pop() + ':number;\n';	//general			
-						}
-						if(converted.includes('string')){
-							converted = converted.replace('string', '') + ':string;\n';
-						}
-						if (converted.includes('boolean')) {
-							converted = converted.replace('boolean', '') + ':boolean;\n';
-							autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
-						}
-						if (autoInsertDate!) {
-							//FIXME: handle this with a function for cleaner code purpose
-							 autoInsertDate.split(' ').forEach(value => {
-								console.log(converted.includes(value));
-								if (converted.includes(value)) {
-									converted = '@Transform(dateTransform)\n' + converted;
-								}
-							});
-						}
-						result.push(converted);
-					});
-				
-				// apply the (accumulated) replacement(s) (if multiple cursors/selections)
-					editBuilder.replace(range, result.join(''));
-					vscode.window.showInformationMessage('[be2fe]: Done! :)');
+					if (word.startsWith('@') && word.endsWith(';')) {
+						word.split(';').map(c => {
+							//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
+							let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
+							console.log(converted);
+							if (converted.includes('long') || converted.includes('integer') || converted.includes('double')) {
+								converted = converted.split(" ").pop() + ':number;\n';	//general			
+							}
+							if (converted.includes('string')) {
+								converted = converted.replace('string', '') + ':string;\n';
+							}
+							if (converted.includes('boolean')) {
+								converted = converted.replace('boolean', '') + ':boolean;\n';
+								autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+							}
+							//FIXME:
+							// converted = checkInsertDate(converted);
+							if (autoInsertDate) {
+								autoInsertDate.split(' ').forEach(value => {
+									if (converted.includes(value)) {
+										converted = '@Transform(dateTransform)\n' + converted;
+									}
+								});
+							}
+
+							result.push(converted);
+						});
+
+						// apply the (accumulated) replacement(s) (if multiple cursors/selections)
+						editBuilder.replace(range, result.join(''));
+						vscode.window.showInformationMessage('[be2fe]: Done! :)');
 					} else {
 						vscode.window.showErrorMessage('[be2fe]: Error :(');
 					}
 				});
-			}); 
+			});
 		}
 
-	},);
+	});
 
 
 	context.subscriptions.push(be2fe);
 
-/*
-async function checkInsertDate(converted: string) {
-		if (autoInsertDate) {
-			await autoInsertDate.split(' ').forEach(value=>{
-				 console.log(converted.includes(value));
-				if (converted.includes(value)){
-					return converted;
+	//FIXME: to check 
+	/*function checkInsertDate(converted: string): string {
+			autoInsertDate.split(' ').forEach(value => {
+				if (converted.includes(value)) {
+					return ('@Transform(dateTransform)\n' + converted);
 				}
 			});
-		}
+			return converted;
 	}
 	*/
+
+	//FIXME: to check promise
+	/*
+		function checkInsertDate(converted: string): Promise<string> {
+		return new Promise((resolve) => {
+			autoInsertDate.split(' ').forEach(value => {
+				if (converted.includes(value)) {
+					resolve('@Transform(dateTransform)\n' + converted);
+				}
+			});
+		});
+	}
+	*/
+
 
 
 }

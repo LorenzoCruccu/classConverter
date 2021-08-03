@@ -1,5 +1,9 @@
 # Change Log
 
+### [Version 0.0.4]
+
+- README and images
+
 ### [Version 0.0.3]
 
 - Cleaner code

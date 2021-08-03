@@ -6,15 +6,16 @@ import * as vscode from 'vscode';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	//confs
-	const autoInsertDate: string = vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-	const customUtilities: any = vscode.workspace.getConfiguration().get('be2fe.utilities');
-	const autoClassTransformer: any = vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement');
-	//
+
 
 	// *** java to typescript
 	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', async () => {
 
+		//confs
+		const autoInsertDate: string = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+		const customUtilities: string = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+		const autoClassTransformer: boolean = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+		//
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 
@@ -41,7 +42,7 @@ export function activate(context: vscode.ExtensionContext) {
 								converted = converted.split(" ").pop() + ':number;\n';	//general			
 							}
 							if (converted.includes('string')) {
-								converted = converted.replace('string', '') + ':string;\n';
+								converted = converted.replace('string', '').trimLeft() + ':string;\n';
 							}
 							if (converted.includes('boolean')) {
 								converted = converted.replace('boolean', '') + ':boolean;\n';
@@ -62,21 +63,22 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 		}
 
+		function checkInsertDate(converted: string): string {
+			if (autoInsertDate) {
+				autoInsertDate.split(' ').forEach(value => {
+					if (converted.includes(value)) {
+						return converted = '@Transform(dateTransform)\n' + converted;
+					}
+				});
+			}
+			return converted;
+		}
+
 	});
 
 
 	context.subscriptions.push(be2fe);
 
-	function checkInsertDate(converted: string): string {
-		if (autoInsertDate) {
-			autoInsertDate.split(' ').forEach(value => {
-				if (converted.includes(value)) {
-					return converted = '@Transform(dateTransform)\n' + converted;
-				}
-			});
-		}
-		return converted;
-	}
 
 	//TODO: to check promise (only for studing purpose)
 	/*
@@ -107,4 +109,6 @@ export function deactivate() {}
 	//TODO: stessa cosa ma MySql -> Typescript
 
 	//TODO: the replacement script could be improved
+
+	//DONE: async get confs
 

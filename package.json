@@ -20,7 +20,7 @@
 			{
 				"title": "BE -> FE classes",
 				"properties": {
-					"be2fe.autoImplement": {
+					"be2fe.autoClassTransformerImplement": {
 						"type": "boolean",
 						"default": true,
 						"description": "Automatically add class @Transform(boolTransform) attributes when possible",

@@ -79,7 +79,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(be2fe);
 
 
-	//TODO: to check promise (only for studing purpose)
+	// to check promise (only for studing purpose)
 	/*
 		function checkInsertDate(converted: string): Promise<string> {
 		return new Promise((resolve) => {
@@ -107,7 +107,7 @@ export function deactivate() {}
 
 	//TODO: stessa cosa ma MySql -> Typescript
 
-	//TODO: the replacement script could be improved
+	//TODO: the replacement script could be improved // improved
 
 	//DONE: async get confs
 

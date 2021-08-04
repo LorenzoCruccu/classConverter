@@ -44,14 +44,13 @@ export function activate(context: vscode.ExtensionContext) {
 									converted = converted.replace('string', '').trimLeft() + ':string;\n';
 								} else
 									if (converted.startsWith('boolean')) {
-										converted = converted.replace('boolean', '') + ':boolean;\n';
+										converted = converted.replace('boolean', '').trimLeft() + ':boolean;\n';
 										autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 									}
 							converted = checkInsertDate(converted);
 
 							result.push(converted);
 						});
-
 						// apply the (accumulated) replacement(s) (if multiple cursors/selections)
 						editBuilder.replace(range, result.join(''));
 						vscode.window.showInformationMessage('[be2fe]: Done! :)');

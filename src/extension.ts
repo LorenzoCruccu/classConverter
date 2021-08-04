@@ -37,14 +37,14 @@ export function activate(context: vscode.ExtensionContext) {
 							//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
 							let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase().trimLeft();
 							console.log(converted);
-							if (converted.startsWith('long') || converted.startsWith('integer') || converted.startsWith('double')) {
+							if (converted.startsWith('long') || converted.startsWith('integer') || converted.startsWith('double') || converted.startsWith('int')) {
 								converted = converted.split(" ").pop() + ':number;\n';	//general			
 							} else
 								if (converted.startsWith('string')) {
-									converted = converted.replace('string', '').trimLeft() + ':string;\n';
+									converted = converted.replace('string', '') + ':string;\n';
 								} else
 									if (converted.startsWith('boolean')) {
-										converted = converted.replace('boolean', '').trimLeft() + ':boolean;\n';
+										converted = converted.replace('boolean', '') + ':boolean;\n';
 										autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 									}
 							converted = checkInsertDate(converted);
@@ -53,6 +53,8 @@ export function activate(context: vscode.ExtensionContext) {
 						});
 						// apply the (accumulated) replacement(s) (if multiple cursors/selections)
 						editBuilder.replace(range, result.join(''));
+						vscode.workspace.saveAll(true);
+
 						vscode.window.showInformationMessage('[be2fe]: Done! :)');
 					} else {
 						vscode.window.showErrorMessage('[be2fe]: Error :(');

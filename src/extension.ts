@@ -19,7 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 
-
 		if (editor) {
 			const document = editor.document;
 			editor.edit(editBuilder => {
@@ -36,18 +35,18 @@ export function activate(context: vscode.ExtensionContext) {
 					if (word.startsWith('@') && word.endsWith(';')) {
 						word.split(';').map(c => {
 							//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
-							let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase();
+							let converted = c.split('private').filter(a => !a.includes('@'))[0].toLowerCase().trimLeft();
 							console.log(converted);
-							if (converted.includes('long') || converted.includes('integer') || converted.includes('double')) {
+							if (converted.startsWith('long') || converted.startsWith('integer') || converted.startsWith('double')) {
 								converted = converted.split(" ").pop() + ':number;\n';	//general			
-							}
-							if (converted.includes('string')) {
-								converted = converted.replace('string', '').trimLeft() + ':string;\n';
-							}
-							if (converted.includes('boolean')) {
-								converted = converted.replace('boolean', '') + ':boolean;\n';
-								autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
-							}
+							} else
+								if (converted.startsWith('string')) {
+									converted = converted.replace('string', '').trimLeft() + ':string;\n';
+								} else
+									if (converted.startsWith('boolean')) {
+										converted = converted.replace('boolean', '') + ':boolean;\n';
+										autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+									}
 							converted = checkInsertDate(converted);
 
 							result.push(converted);

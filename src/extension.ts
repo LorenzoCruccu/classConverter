@@ -63,7 +63,7 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		function checkInsertDate(converted: string): string {
-			if (autoInsertDate && autoClassTransformer) {
+			if (autoInsertDate) {
 				autoInsertDate.split(' ').forEach(value => {
 					if (converted.includes(value)) {
 						return converted = '@Transform(dateTransform)\n' + converted;

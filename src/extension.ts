@@ -12,15 +12,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 		//confs
 		let confs: Conf = {} as Conf;
-		try {
-			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-			confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
-			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
-		} catch (error) {
-			console.log(error);
-			vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
-		}
 
+		await getConfs();
 		//
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
@@ -81,9 +74,15 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		async function getConfs() {
-			const autoInsertDate: string = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-			const customUtilities: string = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
-			const autoClassTransformer: boolean = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+			try {
+				confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+				confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+				confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+
+			} catch (error) {
+				console.log(error);
+				vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
+			}
 		}
 
 	});

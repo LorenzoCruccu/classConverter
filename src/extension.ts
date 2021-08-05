@@ -1,20 +1,26 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { Conf } from './interfaces';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-
-
 	// *** java to typescript
 	let be2fe = vscode.commands.registerCommand('classConverter.java2typescript', async () => {
 
 		//confs
-		const autoInsertDate: string = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-		const customUtilities: string = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
-		const autoClassTransformer: boolean = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+		let confs: Conf = {} as Conf;
+		try {
+			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+			confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+		} catch (error) {
+			console.log(error);
+			vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
+		}
+
 		//
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
@@ -22,13 +28,13 @@ export function activate(context: vscode.ExtensionContext) {
 		if (editor) {
 			const document = editor.document;
 			editor.edit(editBuilder => {
-				editor.selections.forEach(sel => {
+				editor.selections.forEach(async sel => {
 					const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
 					let word = document.getText(range).trim(); //word contiene la selezione
 
 					// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = customUtilities ? '/*\n' + customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
+					let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
 					let result: string[] = [...utilities];
 					//controllo per non sminchiare tutto
@@ -45,14 +51,14 @@ export function activate(context: vscode.ExtensionContext) {
 								} else
 									if (converted.startsWith('boolean')) {
 										converted = converted.replace('boolean', '') + ':boolean;\n';
-										autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+										confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 									}
 							converted = checkInsertDate(converted);
 
 							result.push(converted);
 						});
 						// apply the (accumulated) replacement(s) (if multiple cursors/selections)
-						editBuilder.replace(range, result.join(''));
+						await editBuilder.replace(range, result.join(''));
 						vscode.workspace.saveAll(true);
 
 						vscode.window.showInformationMessage('[be2fe]: Done! :)');
@@ -64,14 +70,20 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 
 		function checkInsertDate(converted: string): string {
-			if (autoInsertDate) {
-				autoInsertDate.split(' ').forEach(value => {
+			if (confs.autoInsertDate) {
+				confs.autoInsertDate.split(' ').forEach(value => {
 					if (converted.includes(value)) {
 						return converted = '@Transform(dateTransform)\n' + converted;
 					}
 				});
 			}
 			return converted;
+		}
+
+		async function getConfs() {
+			const autoInsertDate: string = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+			const customUtilities: string = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+			const autoClassTransformer: boolean = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
 		}
 
 	});

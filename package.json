@@ -12,7 +12,8 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:classConverter.java2typescript"
+		"onCommand:classConverter.java2typescript",
+		"onCommand:classConverter.mysql2typescript"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -46,12 +47,21 @@
 				"category": "be2fe",
 				"command": "classConverter.java2typescript",
 				"title": "[java2typescript]: BE Java class -> FE Typescript class"
+			},
+			{
+				"category": "be2fe",
+				"command": "classConverter.mysql2typescript",
+				"title": "[mysql2typescript]: BE Mysql table -> FE Typescript class"
 			}
 		],
 		"menus": {
 			"commandPalette": [
 				{
 					"command": "classConverter.java2typescript",
+					"when": "editorHasSelection"
+				},
+				{
+					"command": "classConverter.mysql2typescript",
 					"when": "editorHasSelection"
 				}
 			]

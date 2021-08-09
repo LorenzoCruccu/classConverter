@@ -97,49 +97,48 @@ export function activate(context: vscode.ExtensionContext) {
 		if (editor) {
 			const document = editor.document;
 			editor.edit(editBuilder => {
-				editor.selections.forEach(async sel => {
-					const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
-					let word = document.getText(range).trim(); //word contiene la selezione
+				const sel = editor.selection;
+				const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
+				let word = document.getText(range).trim(); //word contiene la selezione
 
-					// utilities (commento iniziale sopra gli attributi)
+				// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
+				let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
-					let result: string[] = [...utilities];
-					//controllo per non sminchiare tutto
-					if (word.startsWith('CREATE')) {
-						const a = word.substring(word.indexOf('(') + 1).split('PRIMARY')[0];
-						console.log(a);
-						let b = a.split(',');
-						b.pop();
-						b.map(c => {
-							//	converted = c.substring(c.indexOf('`') + 1);
-							const line = c.split('`');
-							console.log(line);
-							let converted = line[1];
-							if (line[2].trimLeft().startsWith('bigint') || line[2].trimLeft().startsWith('int') || line[2].trimLeft().startsWith('smallint') || line[2].trimLeft().startsWith('tinyint') || line[2].trimLeft().startsWith('mediumint') || line[2].trimLeft().startsWith('decimal') || line[2].trimLeft().startsWith('float') || line[2].trimLeft().startsWith('double') || line[2].trimLeft().startsWith('integer')) {
-								converted = converted.split(" ").pop() + ':number;\n';	//general			
+				let result: string[] = [...utilities];
+				//controllo per non sminchiare tutto
+				if (word.startsWith('CREATE')) {
+					const a = word.substring(word.indexOf('(') + 1).split('PRIMARY')[0];
+					console.log(a);
+					let b = a.split(',');
+					b.pop();
+					b.map(c => {
+						//	converted = c.substring(c.indexOf('`') + 1);
+						const line = c.split('`');
+						console.log(line);
+						let converted = line[1];
+						if (line[2].trimLeft().startsWith('bigint') || line[2].trimLeft().startsWith('int') || line[2].trimLeft().startsWith('smallint') || line[2].trimLeft().startsWith('tinyint') || line[2].trimLeft().startsWith('mediumint') || line[2].trimLeft().startsWith('decimal') || line[2].trimLeft().startsWith('float') || line[2].trimLeft().startsWith('double') || line[2].trimLeft().startsWith('integer')) {
+							converted = converted.split(" ").pop() + ':number;\n';	//general			
+						} else
+							if (line[2].trimLeft().startsWith('varchar')) {
+								converted = converted.replace('string', '') + ':string;\n';
 							} else
-								if (line[2].trimLeft().startsWith('varchar')) {
-									converted = converted.replace('string', '') + ':string;\n';
-								} else
-									if (line[2].trimLeft().startsWith('boolean')) {
-										converted = converted.replace('boolean', '') + ':boolean;\n';
-										confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
-									}
-							converted = checkInsertDate(converted);
+								if (line[2].trimLeft().startsWith('boolean')) {
+									converted = converted.replace('boolean', '') + ':boolean;\n';
+									confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+								}
+						converted = checkInsertDate(converted);
 
-							result.push(converted);
-						});
-						// apply the (accumulated) replacement(s) (if multiple cursors/selections)
-						editBuilder.replace(range, result.join(''));
-						vscode.workspace.saveAll(true);
+						result.push(converted);
+					});
+					// apply the (accumulated) replacement(s) (if multiple cursors/selections)
+					editBuilder.replace(range, result.join(''));
+					vscode.workspace.saveAll(true);
 
-						vscode.window.showInformationMessage('[be2fe]: Done! :)');
-					} else {
-						vscode.window.showErrorMessage('[be2fe]: Error :(');
-					}
-				});
+					vscode.window.showInformationMessage('[be2fe]: Done! :)');
+				} else {
+					vscode.window.showErrorMessage('[be2fe]: Error :(');
+				}
 			});
 		}
 

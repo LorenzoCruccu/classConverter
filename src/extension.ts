@@ -7,16 +7,16 @@ import { Conf } from './interfaces';
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// *** java to typescript
-	let java2typescript = vscode.commands.registerCommand('classConverter.java2typescript', async () => {
-		//confs
-		let confs: Conf = {} as Conf;
+	const confs: Conf = {} as Conf;
 
+	// *** java to typescript
+	const java2typescript = vscode.commands.registerCommand('classConverter.java2typescript', async () => {
+
+		//confs
 		await getConfs();
-		//
+
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
-
 		if (editor) {
 			const document = editor.document;
 			editor.edit(editBuilder => {
@@ -87,9 +87,9 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	// *** mysql to typescript
-	let mysql2typescript = vscode.commands.registerCommand('classConverter.mysql2typescript', async () => {
+	const mysql2typescript = vscode.commands.registerCommand('classConverter.mysql2typescript', async () => {
 		//confs
-		let confs: Conf = {} as Conf;
+		let initClass: boolean = false;
 		await getConfs();
 		//
 		// Get the active text editor
@@ -101,11 +101,25 @@ export function activate(context: vscode.ExtensionContext) {
 				const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
 				let word = document.getText(range).trim(); //word contiene la selezione
 
+				/*await vscode.window
+					.showInformationMessage(
+						"Do you want to do this?",
+						...["Yes", "No"]
+					)
+					.then((answer) => {
+						if (answer === "Yes") {
+							initClass = true;
+						}
+					});
+					*/
+
 				// utilities (commento iniziale sopra gli attributi)
 
 				let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
-				let result: string[] = [...utilities];
+				let result: string[] = [];
+				result = [...utilities];
+
 				//controllo per non sminchiare tutto
 				if (word.startsWith('CREATE')) {
 					const a = word.substring(word.indexOf('(') + 1).split('PRIMARY')[0];
@@ -116,14 +130,15 @@ export function activate(context: vscode.ExtensionContext) {
 						//	converted = c.substring(c.indexOf('`') + 1);
 						const line = c.split('`');
 						console.log(line);
+						let lineType = line[2].trimLeft();
 						let converted = line[1];
-						if (line[2].trimLeft().startsWith('bigint') || line[2].trimLeft().startsWith('int') || line[2].trimLeft().startsWith('smallint') || line[2].trimLeft().startsWith('tinyint') || line[2].trimLeft().startsWith('mediumint') || line[2].trimLeft().startsWith('decimal') || line[2].trimLeft().startsWith('float') || line[2].trimLeft().startsWith('double') || line[2].trimLeft().startsWith('integer')) {
+						if (lineType.startsWith('bigint') || lineType.startsWith('int') || lineType.startsWith('smallint') || lineType.startsWith('tinyint') || lineType.startsWith('mediumint') || lineType.startsWith('decimal') || lineType.startsWith('float') || lineType.startsWith('double') || lineType.startsWith('integer')) {
 							converted = converted.split(" ").pop() + ':number;\n';	//general			
 						} else
-							if (line[2].trimLeft().startsWith('varchar')) {
+							if (lineType.startsWith('varchar')) {
 								converted = converted.replace('string', '') + ':string;\n';
 							} else
-								if (line[2].trimLeft().startsWith('boolean')) {
+								if (lineType.startsWith('boolean')) {
 									converted = converted.replace('boolean', '') + ':boolean;\n';
 									confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
 								}
@@ -140,6 +155,15 @@ export function activate(context: vscode.ExtensionContext) {
 					vscode.window.showErrorMessage('[be2fe]: Error :(');
 				}
 			});
+		}
+
+		function initMysqlClass(word: string): string {
+			if (initClass) {
+				let className = word.split('`')[1];
+				className = className[0].toUpperCase() + className.slice(1);
+				return 'export class ' + className + ' {';
+			}
+			return '';
 		}
 
 		function checkInsertDate(converted: string): string {

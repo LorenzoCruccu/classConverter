@@ -4,7 +4,7 @@
 	"description": "BE->FE classes",
 	"icon": "images/be2fe-icon.png",
 	"publisher": "lorenzocruccu",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"engines": {
 		"vscode": "^1.58.0"
 	},
@@ -33,10 +33,16 @@
 						"description": "Automatically add @Transform(dataTransform) above this list of words. Must separate each word only with a space to make this work properly",
 						"scope": "be2fe-classTransformerDate"
 					},
+					"be2fe.enableUtilities": {
+						"type": "boolean",
+						"default": true,
+						"description": "Add a comment above the attributes. You can custom the content in be2fe.utilities",
+						"scope": "classtransformer-autoimplement"
+					},
 					"be2fe.utilities": {
 						"type": "string",
 						"default": "",
-						"description": "Add a comment with your utilities. By default it will add some class transformer utilities",
+						"description": "Add a custom comment above your attributes (you can use \n to go to head)",
 						"scope": "be2fe-utilities"
 					}
 				}

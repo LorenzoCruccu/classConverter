@@ -1,6 +1,6 @@
 # classConverter <BETA> README
 
-Hello :) this is my very first extension hope it will help somebody other than me.
+Hello :) this extension will help you to convert classes to typescript language
   
 ## Select the attributes and from the command palette select from which class it is from
   
@@ -14,6 +14,8 @@ Hello :) this is my very first extension hope it will help somebody other than m
 ## Features
   
 - Check be2fe confs to custom the extension
+
+- Converts Java classes to Typescript classes. Must select from 'CREATE' to work
 
 - Converts Java classes to Typescript classes. Must select from '@' to ';' to work
 

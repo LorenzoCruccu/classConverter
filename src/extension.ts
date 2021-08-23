@@ -20,16 +20,16 @@ export function activate(context: vscode.ExtensionContext) {
 		if (editor) {
 			const document = editor.document;
 			editor.edit(editBuilder => {
-				editor.selections.forEach(async sel => {
+				editor.selections.forEach(sel => {
 					const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
 					let word = document.getText(range).trim(); //word contiene la selezione
 
 					// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
+					let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
 
 					let result: string[] = [...utilities];
-					//controllo per non sminchiare tutto
+					//controllo
 					if (word.startsWith('@') && word.endsWith(';')) {
 						word.split(';').map(c => {
 							//rimuove da @ a private, infine va a capo e aggiunge ai risultati da stampare
@@ -82,7 +82,7 @@ export function activate(context: vscode.ExtensionContext) {
 		//
 		await vscode.window
 			.showQuickPick(
-				["Yes", "No"], { placeHolder: 'Do you want to init the whole class?' }
+				["Yes", "No"], { placeHolder: 'Do you want to init the class creation? (export class...)' }
 			)
 			.then((answer) => {
 				if (answer === "Yes") {
@@ -99,8 +99,7 @@ export function activate(context: vscode.ExtensionContext) {
 				let word = document.getText(range).trim(); //word contiene la selezione
 
 				// utilities (commento iniziale sopra gli attributi)
-
-				let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
+				let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
 
 				let result: string[] = [];
 				if (initClass) {
@@ -113,7 +112,7 @@ export function activate(context: vscode.ExtensionContext) {
 				result.push(utilities);
 				console.log(result);
 
-				//controllo per non sminchiare tutto
+				//controllo
 				if (word.startsWith('CREATE')) {
 					const a = word.substring(word.indexOf('(') + 1).split('PRIMARY')[0];
 					console.log(a);
@@ -193,11 +192,12 @@ export function activate(context: vscode.ExtensionContext) {
 		try {
 			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
 			confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+			confs.enableUtilities = await vscode.workspace.getConfiguration().get('be2fe.enableUtilities')!;
 			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
 
 		} catch (error) {
 			console.log(error);
-			vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
+			vscode.window.showErrorMessage('[be2fe]: Error while getting configurations :(');
 		}
 	}
 

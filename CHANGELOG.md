@@ -1,5 +1,9 @@
 # Change Log
 
+### [Version 0.0.5]
+
+- MySQL converter
+
 ### [Version 0.0.4]
 
 - README and images
@@ -14,7 +18,7 @@
 - Added classTransform handling
 - Minor fixes
 
-### version 0.0.1
+### [Version 0.0.1]
 
 - Init extension
 

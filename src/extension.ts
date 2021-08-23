@@ -72,18 +72,6 @@ export function activate(context: vscode.ExtensionContext) {
 			return converted;
 		}
 
-		async function getConfs() {
-			try {
-				confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-				confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
-				confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
-
-			} catch (error) {
-				console.log(error);
-				vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
-			}
-		}
-
 	});
 
 	// *** mysql to typescript
@@ -177,17 +165,6 @@ export function activate(context: vscode.ExtensionContext) {
 			return converted;
 		}
 
-		async function getConfs() {
-			try {
-				confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
-				confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
-				confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
-
-			} catch (error) {
-				console.log(error);
-				vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
-			}
-		}
 	});
 
 
@@ -209,9 +186,21 @@ export function activate(context: vscode.ExtensionContext) {
 	}
 	*/
 
+	async function getConfs(): Promise<any> {
+		try {
+			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
+			confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
+			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
 
+		} catch (error) {
+			console.log(error);
+			vscode.window.showErrorMessage('[be2fe]: Error while getting your configurations :(');
+		}
+	}
 
 }
+
+
 
 // this method is called when your extension is deactivated
 export function deactivate() {}
@@ -222,7 +211,7 @@ export function deactivate() {}
 
 	//DONE: Impostazione per i commenti utilities
 
-	//TODO: stessa cosa ma MySql -> Typescript
+	//DONE: stessa cosa ma MySql -> Typescript
 
 	//TODO: the replacement script could be improved // improved
 

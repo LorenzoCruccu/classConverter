@@ -1,5 +1,15 @@
 # Change Log
 
+### [Version 0.0.7]
+
+- Bug fixes
+- README
+
+### [Version 0.0.6]
+
+- Bug fixes
+- Custom text for Transform()
+
 ### [Version 0.0.5]
 
 - MySQL converter

@@ -26,7 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 					// utilities (commento iniziale sopra gli attributi)
 
-					let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
+					let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to be2fe confs if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
 
 					let result: string[] = [...utilities];
 					//controllo
@@ -101,7 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
 				let word = document.getText(range).trim(); //word contiene la selezione
 
 				// utilities (commento iniziale sopra gli attributi)
-				let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
+				let utilities = confs.enableUtilities ? confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to be2fe confs if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n` : '';
 
 				let result: string[] = [];
 				if (initClass) {

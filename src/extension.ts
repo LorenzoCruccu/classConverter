@@ -80,6 +80,15 @@ export function activate(context: vscode.ExtensionContext) {
 		let initClass: boolean = false;
 		await getConfs();
 		//
+		await vscode.window
+			.showQuickPick(
+				["Yes", "No"], { placeHolder: 'Do you want to init the whole class?' }
+			)
+			.then((answer) => {
+				if (answer === "Yes") {
+					initClass = true;
+				}
+			});
 		// Get the active text editor
 		const editor = vscode.window.activeTextEditor;
 		if (editor) {
@@ -89,24 +98,20 @@ export function activate(context: vscode.ExtensionContext) {
 				const range = sel.isEmpty ? document.getWordRangeAtPosition(sel.start) || sel : sel;
 				let word = document.getText(range).trim(); //word contiene la selezione
 
-				/*await vscode.window
-					.showInformationMessage(
-						"Do you want to do this?",
-						...["Yes", "No"]
-					)
-					.then((answer) => {
-						if (answer === "Yes") {
-							initClass = true;
-						}
-					});
-					*/
-
 				// utilities (commento iniziale sopra gli attributi)
 
 				let utilities = confs.customUtilities ? '/*\n' + confs.customUtilities + '\n*/\n' : `/*\n ### Go to conf.be2fe.utilities if you want to custom me ### \n @Transform(dateTransform)\n @Transform(boolTransform) \n @Type(() => User) \n @Exclude({ toPlainOnly: true }) \n*/\n`;
 
 				let result: string[] = [];
-				result = [...utilities];
+				if (initClass) {
+					let a = word.substring(word.indexOf('`') + 1).split('`')[0];
+					a = capitalizeFirstLetter(a);
+					let init = '\n export class ' + a + '{\n';
+					result = [...init];
+					console.log(result);
+				}
+				result.push(utilities);
+				console.log(result);
 
 				//controllo per non sminchiare tutto
 				if (word.startsWith('CREATE')) {
@@ -117,7 +122,6 @@ export function activate(context: vscode.ExtensionContext) {
 					b.map(c => {
 						//	converted = c.substring(c.indexOf('`') + 1);
 						const line = c.split('`');
-						console.log(line);
 						let lineType = line[2].trimLeft();
 						let converted = line[1];
 						if (lineType.startsWith('bigint') || lineType.startsWith('int') || lineType.startsWith('smallint') || lineType.startsWith('tinyint') || lineType.startsWith('mediumint') || lineType.startsWith('decimal') || lineType.startsWith('float') || lineType.startsWith('double') || lineType.startsWith('integer')) {
@@ -133,7 +137,11 @@ export function activate(context: vscode.ExtensionContext) {
 						converted = checkInsertDate(converted);
 
 						result.push(converted);
+
 					});
+					if (initClass) {
+						result.push('\n}');
+					}
 					// apply the (accumulated) replacement(s) (if multiple cursors/selections)
 					editBuilder.replace(range, result.join(''));
 					vscode.workspace.saveAll(true);
@@ -145,13 +153,8 @@ export function activate(context: vscode.ExtensionContext) {
 			});
 		}
 
-		function initMysqlClass(word: string): string {
-			if (initClass) {
-				let className = word.split('`')[1];
-				className = className[0].toUpperCase() + className.slice(1);
-				return 'export class ' + className + ' {';
-			}
-			return '';
+		function capitalizeFirstLetter(string: string) {
+			return string[0].toUpperCase() + string.slice(1);
 		}
 
 		function checkInsertDate(converted: string): string {

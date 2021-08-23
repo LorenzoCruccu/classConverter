@@ -3,4 +3,6 @@ export interface Conf {
 	customUtilities: string;
 	autoClassTransformer: boolean;
 	enableUtilities: boolean;
+	boolTransformText: string;
+	dataTransformText: string;
 }

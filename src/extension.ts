@@ -44,6 +44,7 @@ export function activate(context: vscode.ExtensionContext) {
 									if (converted.startsWith('boolean')) {
 										converted = converted.replace('boolean', '') + ':boolean;\n';
 										confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+										console.log(confs.autoClassTransformer);
 									}
 							converted = checkInsertDate(converted);
 
@@ -65,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (confs.autoInsertDate) {
 				confs.autoInsertDate.split(' ').forEach(value => {
 					if (converted.includes(value)) {
-						return converted = '@Transform(dateTransform)\n' + converted;
+						return converted = `@Transform(${confs.dataTransformText})\n` + converted;
 					}
 				});
 			}
@@ -79,6 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
 		//confs
 		let initClass: boolean = false;
 		await getConfs();
+
 		//
 		await vscode.window
 			.showQuickPick(
@@ -127,11 +129,11 @@ export function activate(context: vscode.ExtensionContext) {
 							converted = converted.split(" ").pop() + ':number;\n';	//general			
 						} else
 							if (lineType.startsWith('varchar')) {
-								converted = converted.replace('string', '') + ':string;\n';
+								converted = converted.replace('varchar', '') + ':string;\n';
 							} else
 								if (lineType.startsWith('boolean')) {
 									converted = converted.replace('boolean', '') + ':boolean;\n';
-									confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+									confs.autoClassTransformer ? converted = `@Transform(${confs.boolTransformText})\n` + converted : '';
 								}
 						converted = checkInsertDate(converted);
 
@@ -160,7 +162,7 @@ export function activate(context: vscode.ExtensionContext) {
 			if (confs.autoInsertDate) {
 				confs.autoInsertDate.split(' ').forEach(value => {
 					if (converted.includes(value)) {
-						return converted = '@Transform(dateTransform)\n' + converted;
+						return converted = `@Transform(${confs.dataTransformText})\n` + converted;
 					}
 				});
 			}
@@ -193,7 +195,9 @@ export function activate(context: vscode.ExtensionContext) {
 			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;
 			confs.customUtilities = await vscode.workspace.getConfiguration().get('be2fe.utilities')!;
 			confs.enableUtilities = await vscode.workspace.getConfiguration().get('be2fe.enableUtilities')!;
-			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformerImplement')!;
+			confs.autoClassTransformer = await vscode.workspace.getConfiguration().get('be2fe.autoClassTransformer')!;
+			confs.dataTransformText = await vscode.workspace.getConfiguration().get('be2fe.dataTransformText')!;
+			confs.boolTransformText = await vscode.workspace.getConfiguration().get('be2fe.boolTransformText')!;
 
 		} catch (error) {
 			console.log(error);

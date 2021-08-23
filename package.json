@@ -21,11 +21,11 @@
 			{
 				"title": "BE -> FE classes",
 				"properties": {
-					"be2fe.autoClassTransformerImplement": {
+					"be2fe.autoClassTransformer": {
 						"type": "boolean",
 						"default": true,
 						"description": "Automatically add class @Transform(boolTransform) attributes when possible",
-						"scope": "classtransformer-autoimplement"
+						"scope": "classtransformer-autoClassTransformer"
 					},
 					"be2fe.classTransformerDate": {
 						"type": "string",
@@ -37,13 +37,25 @@
 						"type": "boolean",
 						"default": true,
 						"description": "Add a comment above the attributes. You can custom the content in be2fe.utilities",
-						"scope": "classtransformer-autoimplement"
+						"scope": "classtransformer-enableUtilities"
 					},
 					"be2fe.utilities": {
 						"type": "string",
 						"default": "",
 						"description": "Add a custom comment above your attributes (you can use \n to go to head)",
 						"scope": "be2fe-utilities"
+					},
+					"be2fe.boolTransformText": {
+						"type": "string",
+						"default": "boolTransform",
+						"description": "Custom @Transform() for boolean fields",
+						"scope": "be2fe-boolTransformText"
+					},
+					"be2fe.dataTransformText": {
+						"type": "string",
+						"default": "dataTransform",
+						"description": "Custom @Transform() for data fields",
+						"scope": "be2fe-dataTransformText"
 					}
 				}
 			}

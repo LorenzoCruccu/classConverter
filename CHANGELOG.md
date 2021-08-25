@@ -1,5 +1,9 @@
 # Change Log
 
+### [Version 0.0.8]
+
+- Minor bug fixes
+
 ### [Version 0.0.7]
 
 - Bug fixes

@@ -46,7 +46,7 @@
 					"be2fe.utilities": {
 						"type": "string",
 						"default": "",
-						"description": "Add a custom comment above your attributes (you can use \n to go to head)",
+						"description": "Add a custom comment above your attributes (you can use \\n to go to head)",
 						"scope": "be2fe-utilities"
 					},
 					"be2fe.boolTransformText": {

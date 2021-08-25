@@ -43,7 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
 								} else
 									if (converted.startsWith('boolean')) {
 										converted = converted.replace('boolean', '') + ':boolean;\n';
-										confs.autoClassTransformer ? converted = '@Transform(boolTransform)\n' + converted : '';
+										confs.autoClassTransformer ? converted = `@Transform(${confs.boolTransformText})\n` + converted : '';
 										console.log(confs.autoClassTransformer);
 									}
 							converted = checkInsertDate(converted);

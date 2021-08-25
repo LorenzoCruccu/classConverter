@@ -175,21 +175,6 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(java2typescript);
 	context.subscriptions.push(mysql2typescript);
 
-
-
-	// to check promise (only for studing purpose)
-	/*
-		function checkInsertDate(converted: string): Promise<string> {
-		return new Promise((resolve) => {
-			autoInsertDate.split(' ').forEach(value => {
-				if (converted.includes(value)) {
-					resolve('@Transform(dateTransform)\n' + converted);
-				}
-			});
-		});
-	}
-	*/
-
 	async function getConfs(): Promise<any> {
 		try {
 			confs.autoInsertDate = await vscode.workspace.getConfiguration().get('be2fe.classTransformerDate')!;

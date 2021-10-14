@@ -34,7 +34,7 @@
 					"be2fe.classTransformerDate": {
 						"type": "string",
 						"default": "insdate moddate lastdate lastseen",
-						"description": "Automatically add @Transform(dataTransform) above this list of words. Must separate each word only with a space to make this work properly",
+						"description": "Automatically add @Transform(dateTransform) above this list of words. Must separate each word only with a space to make this work properly",
 						"scope": "be2fe-classTransformerDate"
 					},
 					"be2fe.enableUtilities": {

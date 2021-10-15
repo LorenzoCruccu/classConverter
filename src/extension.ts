@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+
 import { Conf } from './interfaces';
 
 // this method is called when your extension is activated
@@ -125,10 +126,10 @@ export function activate(context: vscode.ExtensionContext) {
 						const line = c.split('`');
 						let lineType = line[2].trimLeft();
 						let converted = line[1];
-						if (lineType.startsWith('bigint') || lineType.startsWith('int') || lineType.startsWith('smallint') || lineType.startsWith('tinyint') || lineType.startsWith('mediumint') || lineType.startsWith('decimal') || lineType.startsWith('float') || lineType.startsWith('double') || lineType.startsWith('integer')) {
+						if (lineType.startsWith('bigint') || lineType.startsWith('int') || lineType.startsWith('smallint') || lineType.startsWith('tinyint') || lineType.startsWith('mediumint') || lineType.startsWith('decimal') || lineType.startsWith('float') || lineType.startsWith('double') || lineType.startsWith('integer') || lineType.startsWith('numeric')) {
 							converted = converted.split(" ").pop() + ':number;\n';	//general			
 						} else
-							if (lineType.startsWith('varchar')) {
+							if (lineType.startsWith('varchar') || lineType.startsWith('char') || lineType.startsWith('text') || lineType.startsWith('binary') || lineType.startsWith('varbinary') || lineType.startsWith('blob') || lineType.startsWith('enum') || lineType.startsWith('set')) {
 								converted = converted.replace('varchar', '') + ':string;\n';
 							} else
 								if (lineType.startsWith('boolean')) {

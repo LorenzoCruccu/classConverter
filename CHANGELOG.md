@@ -1,5 +1,11 @@
 # Change Log
 
+### [Version 0.1.0]
+
+- Minor bug fixes
+- Fixed a bug for mysql convertion
+- known bugs: comment that contains "," for mysql will crash the convertion.
+
 ### [Version 0.0.8]
 
 - Minor bug fixes

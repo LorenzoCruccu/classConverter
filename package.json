@@ -4,7 +4,7 @@
 	"description": "BE->FE classes",
 	"icon": "images/be2fe-icon.png",
 	"publisher": "lorenzocruccu",
-	"version": "0.0.8",
+	"version": "0.1.0",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/lorenzocruccu/classconverter.git"

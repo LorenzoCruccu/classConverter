@@ -110,16 +110,19 @@ export function activate(context: vscode.ExtensionContext) {
 					a = capitalizeFirstLetter(a);
 					let init = '\n export class ' + a + '{\n';
 					result = [...init];
-					console.log(result);
+					//console.log(result);
 				}
 				result.push(utilities);
-				console.log(result);
+				//	console.log(result);
 
 				//controllo
 				if (word.startsWith('CREATE')) {
 					const a = word.substring(word.indexOf('(') + 1).split('PRIMARY')[0];
 					console.log(a);
-					let b = a.split(',');
+					//	const regex = `,(?!(?=[^']*'[^']*(?:'[^']*'[^']*)*$))`;
+					//link -> https://regex101.com/r/GZxcVV/1
+					let b = a.split(`\n`);
+					console.log('stringa=' + b);
 					b.pop();
 					b.map(c => {
 						//	converted = c.substring(c.indexOf('`') + 1);

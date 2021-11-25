@@ -6,3 +6,7 @@ export interface Conf {
 	boolTransformText: string;
 	dataTransformText: string;
 }
+
+//array of types
+
+const mysqlString: string[] = ['text', 'varchar', 'char', 'binary', 'varbinary', 'blob', 'enum', 'set'];

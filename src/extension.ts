@@ -121,7 +121,7 @@ export function activate(context: vscode.ExtensionContext) {
 					console.log(a);
 					//	const regex = `,(?!(?=[^']*'[^']*(?:'[^']*'[^']*)*$))`;
 					//link -> https://regex101.com/r/GZxcVV/1
-					let b = a.split(`\n`);
+					let b = a.split(',');
 					console.log('stringa=' + b);
 					b.pop();
 					b.map(c => {
